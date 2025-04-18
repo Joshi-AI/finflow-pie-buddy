@@ -52,6 +52,14 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				// Finance app specific colors
+				finance: {
+					healthcare: '#4ade80', // green
+					academics: '#60a5fa', // blue
+					food: '#f97316', // orange
+					shopping: '#8b5cf6', // purple
+					emergency: '#ef4444', // red
+				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
