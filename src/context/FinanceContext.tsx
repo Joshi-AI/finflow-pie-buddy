@@ -175,7 +175,8 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
     const totalCost = stockData.price * quantity;
     
     if (totalCost > balance.available) {
-      throw new Error(`Insufficient funds. You need ₹${(totalCost - balance.available).toFixed(2)} more to complete this purchase.`);
+      const shortfall = totalCost - balance.available;
+      throw new Error(`Insufficient funds. You need ₹${shortfall.toLocaleString()} more to complete this purchase.`);
     }
     
     // Check if we already own this stock
