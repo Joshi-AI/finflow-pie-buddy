@@ -1,11 +1,11 @@
-
 import React, { useState } from 'react';
-import { TrendingUp, TrendingDown } from 'lucide-react';
+import { TrendingUp, TrendingDown, IndianRupee } from 'lucide-react';
 import { useFinance, Stock } from '@/context/FinanceContext';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { toast } from 'sonner';
 
 export function StockList() {
   const { stocks, buyStock, sellStock, balance } = useFinance();
@@ -22,11 +22,9 @@ export function StockList() {
 
   const handleBuyClick = (stock?: Stock) => {
     if (stock) {
-      // Buying more of an existing stock
       setSelectedStock(stock);
       setDialogType('buy');
     } else {
-      // Buying a new stock
       setSelectedStock(null);
       setDialogType('buy');
     }
@@ -41,9 +39,19 @@ export function StockList() {
   };
 
   const handleSubmit = () => {
+    const totalCost = selectedStock 
+      ? selectedStock.price * quantity 
+      : newStock.price * quantity;
+
+    if (totalCost > balance.available) {
+      toast.error('Insufficient funds', {
+        description: `You need ₹${(totalCost - balance.available).toFixed(2)} more to complete this purchase.`
+      });
+      return;
+    }
+
     if (dialogType === 'buy') {
       if (selectedStock) {
-        // Buy more of existing stock
         buyStock(
           {
             symbol: selectedStock.symbol,
@@ -54,7 +62,6 @@ export function StockList() {
           quantity
         );
       } else {
-        // Buy new stock
         buyStock(
           {
             symbol: newStock.symbol,
@@ -66,7 +73,6 @@ export function StockList() {
         );
       }
     } else {
-      // Sell existing stock
       if (selectedStock) {
         sellStock(selectedStock.id, quantity);
       }
@@ -107,7 +113,10 @@ export function StockList() {
                   <p className="text-sm text-muted-foreground">{stock.name}</p>
                 </div>
                 <div className="text-right">
-                  <p className="font-semibold">${stock.price.toFixed(2)}</p>
+                  <p className="font-semibold flex items-center justify-end gap-1">
+                    <IndianRupee className="w-4 h-4" />
+                    {stock.price.toFixed(2)}
+                  </p>
                   <p className={`text-sm ${stock.change >= 0 ? 'text-green-500' : 'text-red-500'}`}>
                     {stock.change >= 0 ? '+' : ''}{stock.change.toFixed(2)}%
                   </p>
@@ -117,7 +126,10 @@ export function StockList() {
               <div className="flex justify-between items-center">
                 <div>
                   <p className="text-sm text-muted-foreground">Shares: {stock.quantity}</p>
-                  <p className="text-sm font-medium">Value: ${(stock.price * stock.quantity).toFixed(2)}</p>
+                  <p className="text-sm font-medium flex items-center gap-1">
+                    <IndianRupee className="w-4 h-4" />
+                    {(stock.price * stock.quantity).toFixed(2)}
+                  </p>
                 </div>
                 <div className="flex gap-2">
                   <Button size="sm" variant="outline" onClick={() => handleBuyClick(stock)}>Buy</Button>
@@ -189,8 +201,9 @@ export function StockList() {
             {selectedStock && (
               <div className="flex justify-between py-2 border-t border-border">
                 <span>Total:</span>
-                <span className="font-bold">
-                  ${(selectedStock.price * quantity).toFixed(2)}
+                <span className="font-bold flex items-center gap-1">
+                  <IndianRupee className="w-4 h-4" />
+                  {(selectedStock.price * quantity).toFixed(2)}
                 </span>
               </div>
             )}
