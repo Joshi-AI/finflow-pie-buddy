@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { StockList } from '@/components/StockList';
 import { useFinance } from '@/context/FinanceContext';
@@ -11,7 +10,8 @@ import {
   TrendingDown, 
   DollarSign, 
   Clock, 
-  Activity 
+  Activity,
+  IndianRupee
 } from 'lucide-react';
 
 export default function InvestmentsPage() {
