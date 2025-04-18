@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from "react";
 
 // Define types for our financial data
@@ -136,11 +135,18 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
   });
 
   // Calculate balances
-  const balance = {
-    total: 5000, // Simulated total balance
-    available: 3500,
-    invested: stocks.reduce((total, stock) => total + (stock.price * stock.quantity), 0)
-  };
+  const calculateBalance = () => ({
+    invested: stocks.reduce((total, stock) => total + (stock.price * stock.quantity), 0),
+    available: 3500 - stocks.reduce((total, stock) => total + (stock.price * stock.quantity), 0),
+    total: 5000 // Simulated total balance
+  });
+
+  const [balance, setBalance] = useState(calculateBalance());
+
+  // Update balance when stocks change
+  useEffect(() => {
+    setBalance(calculateBalance());
+  }, [stocks]);
 
   // Save data to localStorage when it changes
   useEffect(() => {
@@ -166,6 +172,12 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
 
   // Buy a stock
   const buyStock = (stockData: Omit<Stock, "id" | "quantity">, quantity: number) => {
+    const totalCost = stockData.price * quantity;
+    
+    if (totalCost > balance.available) {
+      throw new Error(`Insufficient funds. You need ₹${(totalCost - balance.available).toFixed(2)} more to complete this purchase.`);
+    }
+    
     // Check if we already own this stock
     const existingStockIndex = stocks.findIndex(s => s.symbol === stockData.symbol);
     

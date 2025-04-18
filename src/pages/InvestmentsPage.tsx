@@ -20,8 +20,9 @@ export default function InvestmentsPage() {
 
   // Calculate stats
   const totalInvested = balance.invested;
-  const portfolioChange = 2.34; // Simulated percentage change
-  const portfolioDirection = portfolioChange >= 0;
+  const initialInvestment = stocks.reduce((total, stock) => total + (stock.price * stock.quantity * (1 - stock.change/100)), 0);
+  const profitLoss = totalInvested - initialInvestment;
+  const portfolioDirection = profitLoss >= 0;
   
   // Simulated market data
   const marketTrends = [
@@ -53,13 +54,13 @@ export default function InvestmentsPage() {
             <div className="space-y-1">
               <p className="text-sm text-muted-foreground">Total Value</p>
               <div className="flex items-center gap-2">
-                <DollarSign className="h-5 w-5 text-primary" />
-                <span className="text-2xl font-bold">${totalInvested.toFixed(2)}</span>
+                <IndianRupee className="h-5 w-5 text-primary" />
+                <span className="text-2xl font-bold">{totalInvested.toFixed(2)}</span>
               </div>
             </div>
             
             <div className="space-y-1">
-              <p className="text-sm text-muted-foreground">Performance</p>
+              <p className="text-sm text-muted-foreground">Profit/Loss</p>
               <div className="flex items-center gap-2">
                 {portfolioDirection ? (
                   <TrendingUp className="h-5 w-5 text-green-500" />
@@ -69,7 +70,7 @@ export default function InvestmentsPage() {
                 <span className={`text-2xl font-bold ${
                   portfolioDirection ? 'text-green-500' : 'text-red-500'
                 }`}>
-                  {portfolioDirection ? '+' : ''}{portfolioChange}%
+                  {portfolioDirection ? '+' : ''}{profitLoss.toFixed(2)}
                 </span>
               </div>
             </div>

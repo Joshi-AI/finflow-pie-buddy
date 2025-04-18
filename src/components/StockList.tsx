@@ -39,52 +39,49 @@ export function StockList() {
   };
 
   const handleSubmit = () => {
-    const totalCost = selectedStock 
-      ? selectedStock.price * quantity 
-      : newStock.price * quantity;
-
-    if (totalCost > balance.available) {
-      toast.error('Insufficient funds', {
-        description: `You need ₹${(totalCost - balance.available).toFixed(2)} more to complete this purchase.`
-      });
-      return;
-    }
-
-    if (dialogType === 'buy') {
-      if (selectedStock) {
-        buyStock(
-          {
-            symbol: selectedStock.symbol,
-            name: selectedStock.name,
-            price: selectedStock.price,
-            change: selectedStock.change
-          },
-          quantity
-        );
+    try {
+      if (dialogType === 'buy') {
+        if (selectedStock) {
+          buyStock(
+            {
+              symbol: selectedStock.symbol,
+              name: selectedStock.name,
+              price: selectedStock.price,
+              change: selectedStock.change
+            },
+            quantity
+          );
+        } else {
+          buyStock(
+            {
+              symbol: newStock.symbol,
+              name: newStock.name,
+              price: newStock.price,
+              change: newStock.change
+            },
+            quantity
+          );
+        }
       } else {
-        buyStock(
-          {
-            symbol: newStock.symbol,
-            name: newStock.name,
-            price: newStock.price,
-            change: newStock.change
-          },
-          quantity
-        );
+        if (selectedStock) {
+          sellStock(selectedStock.id, quantity);
+        }
       }
-    } else {
-      if (selectedStock) {
-        sellStock(selectedStock.id, quantity);
+      setIsDialogOpen(false);
+      setQuantity(1);
+      setNewStock({
+        symbol: '',
+        name: '',
+        price: 0,
+        change: 0
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error('Purchase Failed', {
+          description: error.message
+        });
       }
     }
-    setIsDialogOpen(false);
-    setQuantity(1);
-    setNewStock({
-      symbol: '',
-      name: '',
-      price: 0,
-      change: 0
-    });
   };
 
   return (
