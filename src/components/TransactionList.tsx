@@ -1,6 +1,6 @@
-
 import React from 'react';
 import { format } from 'date-fns';
+import { IndianRupee } from 'lucide-react';
 import { useFinance, Transaction } from '@/context/FinanceContext';
 import { ShoppingBag, BookOpen, Utensils, Heart, ShieldAlert, HelpCircle } from 'lucide-react';
 
@@ -51,7 +51,10 @@ export function TransactionList() {
                   </p>
                 </div>
               </div>
-              <span className="font-semibold">${transaction.amount.toFixed(2)}</span>
+              <span className="font-semibold flex items-center gap-1">
+                <IndianRupee className="w-4 h-4" />
+                {transaction.amount.toFixed(2)}
+              </span>
             </div>
           ))
         )}

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { ExpensePieChart } from '@/components/ExpensePieChart';
 import { TransactionList } from '@/components/TransactionList';
@@ -6,7 +5,7 @@ import { EmergencyFund } from '@/components/EmergencyFund';
 import { AddTransactionForm } from '@/components/AddTransactionForm';
 import { useFinance } from '@/context/FinanceContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Wallet, DollarSign, TrendingUp, ShieldAlert } from 'lucide-react';
+import { Wallet, IndianRupee, TrendingUp, ShieldAlert } from 'lucide-react';
 
 export default function FundsPage() {
   const { balance } = useFinance();
@@ -14,19 +13,28 @@ export default function FundsPage() {
   const stats = [
     {
       title: 'Total Balance',
-      value: `$${balance.total.toFixed(2)}`,
+      value: <div className="flex items-center gap-1">
+        <IndianRupee className="w-4 h-4" />
+        {balance.total.toFixed(2)}
+      </div>,
       icon: <Wallet className="w-4 h-4" />,
       description: 'Your total assets',
     },
     {
       title: 'Available',
-      value: `$${balance.available.toFixed(2)}`,
-      icon: <DollarSign className="w-4 h-4" />,
+      value: <div className="flex items-center gap-1">
+        <IndianRupee className="w-4 h-4" />
+        {balance.available.toFixed(2)}
+      </div>,
+      icon: <IndianRupee className="w-4 h-4" />,
       description: 'Available to spend',
     },
     {
       title: 'Invested',
-      value: `$${balance.invested.toFixed(2)}`,
+      value: <div className="flex items-center gap-1">
+        <IndianRupee className="w-4 h-4" />
+        {balance.invested.toFixed(2)}
+      </div>,
       icon: <TrendingUp className="w-4 h-4" />,
       description: 'Market value',
     },
@@ -48,7 +56,7 @@ export default function FundsPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stat.value}</div>
+              <div className="text-2xl font-bold flex items-center gap-1">{stat.value}</div>
               <p className="text-xs text-muted-foreground">{stat.description}</p>
             </CardContent>
           </Card>

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Shield } from 'lucide-react';
+import { Shield, IndianRupee } from 'lucide-react';
 import { useFinance } from '@/context/FinanceContext';
 import { Progress } from '@/components/ui/progress';
 
@@ -21,12 +21,18 @@ export function EmergencyFund() {
       
       <div className="flex justify-between items-center mb-2">
         <span className="text-sm text-muted-foreground">Current</span>
-        <span className="font-medium">${emergencyFund.current.toFixed(2)}</span>
+        <span className="font-medium flex items-center gap-1">
+          <IndianRupee className="w-4 h-4" />
+          {emergencyFund.current.toFixed(2)}
+        </span>
       </div>
       
       <div className="flex justify-between items-center mb-3">
         <span className="text-sm text-muted-foreground">Target</span>
-        <span className="font-medium">${emergencyFund.target.toFixed(2)}</span>
+        <span className="font-medium flex items-center gap-1">
+          <IndianRupee className="w-4 h-4" />
+          {emergencyFund.target.toFixed(2)}
+        </span>
       </div>
       
       <Progress value={percentage} className="h-2" />
